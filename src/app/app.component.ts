@@ -136,6 +136,7 @@ export class AppComponent {
           player.battingStyle = null;
         }
       }
+
       this.uploadPlayes.push(player);
     }
   }
