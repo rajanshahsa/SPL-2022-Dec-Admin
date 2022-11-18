@@ -3,6 +3,8 @@ import { constants } from './constants';
 import {
   HttpClient,
   HttpErrorResponse,
+  HttpEvent,
+  HttpEventType,
   HttpHeaders,
 } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -177,4 +179,33 @@ export class ApiService {
     }
     return false;
   }
+
+  async uploadFileWithProgress(path: any, obj: any) {
+    const netowrkIsConnected = await this.getNetworkConnection();
+    if (netowrkIsConnected) {
+        const headers = await this.getHeaders(false, true);
+        return this.http.post<any>(`${this.URL}${path}`, obj, {
+            headers, reportProgress: true,
+            observe: 'events'
+        }).subscribe((e: any) => {
+          switch (e.type) {
+              case HttpEventType.Sent:
+                  break;
+              case HttpEventType.ResponseHeader:
+                  break;
+              case HttpEventType.UploadProgress:
+                  let progress = Math.round(e.loaded / e.total * 100);
+                  console.log('progress',progress);
+
+                  break;
+              case HttpEventType.Response:
+                 debugger;
+          }
+      });;
+    } else {
+        // this.ngxLoader.stop();
+        this.toastr.error(constants.NO_INTERNET_CONNECTION_MSG);
+    }
+
+}
 }

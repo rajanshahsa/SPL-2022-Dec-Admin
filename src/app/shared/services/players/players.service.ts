@@ -22,4 +22,8 @@ export class PlayersService {
     return this.apiService.post(`/players/${id}`,playerData, false);
   }
 
+  async uploadPlayers(playerData:any) {
+    return this.apiService.post(`/players/`,playerData, false);
+  }
+
 }
